@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.airtennisfriend" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>AirTennisFriend</name>
+    <description>
+      Air Tennis Friend is a mobile app that let you find friends within a radius to partner with for a game of tennis.
+    </description>
+    <author email="madari.jyothin@gmail.com" href="http://">
+        Air Tennis Friend Team
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <preference name="BackgroundColor"  value="0xff00ff00" />
+
+    <preference name="LoadUrlTimeoutValue" value="20000" />
+    <preference name="SplashScreen" value="splash" />
+    <preference name="SplashScreenDelay" value="3000" />
+    <!--<preference name="LoadingDialog" value="Loading..., Please wait" />-->
+    <preference name="LoadingPageDialog" value="Loading..., Please wait" />
+    <preference name="ShowTitle" value="true" />
+    <preference name="LogLevel" value="VERBOSE" /><!-- ERROR, WARN, INFO, DEBUG, VERBOSE -->
+    <platform name="android">
+      <icon src="www/img/icon/airtennisfriend_100x56_160ppi_mdpi.png" width="100" height="56" />
+      <icon src="www/img/icon/airtennisfriend_100x56_160ppi_mdpi.png" width="100" height="56" density="ldpi" />
+      <icon src="www/img/icon/airtennisfriend_100x56_160ppi_mdpi.png" width="100" height="56" density="mdpi" />
+      <icon src="www/img/icon/airtennisfriend_100x56_160ppi_mdpi.png" width="100" height="56" density="hdpi" />
+      <icon src="www/img/icon/airtennisfriend_100x56_160ppi_mdpi.png" width="100" height="56" density="xhdpi" />
+      <icon src="www/img/icon/airtennisfriend_100x56_160ppi_mdpi.png" width="100" height="56" density="xxhdpi" />
+      <splash src="www/img/splash/splash.png" density="port-mdpi" />
+    </platform>
+</widget>

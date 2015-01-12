@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.airtennisfriend" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <preference name="loglevel" value="DEBUG" />
+    <feature name="Device">
+        <param name="android-package" value="org.apache.cordova.device.Device" />
+    </feature>
+    <feature name="Notification">
+        <param name="android-package" value="org.apache.cordova.dialogs.Notification" />
+    </feature>
+    <feature name="Vibration">
+        <param name="android-package" value="org.apache.cordova.vibration.Vibration" />
+    </feature>
+    <feature name="Camera">
+        <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
+    </feature>
+    <feature name="ParsePlugin">
+        <param name="android-package" value="org.apache.cordova.core.ParsePlugin" />
+    </feature>
+    <icon height="56" src="www/img/icon/airtennisfriend_100x56_160ppi_mdpi.png" width="100" />
+    <icon density="ldpi" height="56" src="www/img/icon/airtennisfriend_100x56_160ppi_mdpi.png" width="100" />
+    <icon density="mdpi" height="56" src="www/img/icon/airtennisfriend_100x56_160ppi_mdpi.png" width="100" />
+    <icon density="hdpi" height="56" src="www/img/icon/airtennisfriend_100x56_160ppi_mdpi.png" width="100" />
+    <icon density="xhdpi" height="56" src="www/img/icon/airtennisfriend_100x56_160ppi_mdpi.png" width="100" />
+    <icon density="xxhdpi" height="56" src="www/img/icon/airtennisfriend_100x56_160ppi_mdpi.png" width="100" />
+    <splash density="port-mdpi" src="www/img/splash/splash.png" />
+    <name>AirTennisFriend</name>
+    <description>
+      Air Tennis Friend is a mobile app that let you find friends within a radius to partner with for a game of tennis.
+    </description>
+    <author email="madari.jyothin@gmail.com" href="http://">
+        Air Tennis Friend Team
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <preference name="BackgroundColor" value="0xff00ff00" />
+    <preference name="LoadUrlTimeoutValue" value="20000" />
+    <preference name="SplashScreen" value="splash" />
+    <preference name="SplashScreenDelay" value="3000" />
+    <preference name="LoadingPageDialog" value="Loading..., Please wait" />
+    <preference name="ShowTitle" value="true" />
+    <preference name="LogLevel" value="VERBOSE" />
+</widget>

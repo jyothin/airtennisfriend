@@ -1,0 +1,11 @@
+{
+    "version": "0.1.0",
+    "name": "com.parse.cordova.core.pushplugin",
+    "cordova_name": "phonegap-parse-plugin",
+    "description": "phonegap parse plugin",
+    "platforms": [
+        "android",
+        "ios"
+    ],
+    "engines": []
+}

@@ -1,0 +1,80 @@
+
+
+If you are using KnockoutJS you can create a horizontal push-button style radio set pretty easily. First, define the styles:
+
+.radio-set {
+display:inline-block;
+vertical-align: middle;
+border-radius: 6px;
+clear: both;
+border:1px solid gray;
+width:100%;
+}
+
+.radio-set div {
+float:left;
+clear: none;
+margin:0px;
+padding:4px 6px;
+border-right:1px groove gray;
+}
+
+.radio-set div:last-child {
+border-right:0px solid gray;
+}
+
+.radio-set-a > div {
+/* width: 49.95%; IE7 /
+/ margin-right: -.5px; BB5 */
+width: 50%;
+}
+
+.radio-set-b > div {
+/* width: 33.25%; IE7 /
+/ margin-right: -.5px; BB5 */
+width: 33.333%;
+}
+
+.radio-set-c > div {
+/* width: 24.925%; IE7 /
+/ margin-right: -.5px; BB5 */
+width: 25%;
+}
+
+.radio-set-d > div {
+/* width: 19.925%; IE7 */
+width: 20%;
+}
+
+Next, add the custom Knockout bindingHandler (mine are called 'MDChecked'):
+
+ko.bindingHandlers.mdChecked = {
+init: function (element, valueAccessor, allBindings) {
+$(element).click(function() {
+var value = valueAccessor();
+var thisValue = allBindings.get('thisValue');
+value(thisValue);
+});
+},
+update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+// First get the latest data that we're bound to
+var value = valueAccessor();
+// Next, whether or not the supplied model property is observable, get its current value
+var valueUnwrapped = ko.unwrap(value);
+// Grab some more data from another binding property
+var thisValue = allBindings.get('thisValue');
+
+    // Now manipulate the DOM element
+    if (valueUnwrapped == thisValue)
+        $(element).addClass("active"); // Make the element visible
+    else
+        $(element).removeClass("active");   // Make the element invisible        
+}
+
+}
+
+Now, in your HTML file, define your radio buttons. Note that we use the "btn-primary" and "active" styles from Ratchet to style our radio button colors. Also, this example has three buttons so it adds "radio-set-b" so that the three fill the radio set area:
+First
+Second
+Third
+

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <!--<link media="Screen" href="styles.css" type="text/css" rel="stylesheet"/>-->
+        <!--<link rel="stylesheet" href="handheld.css" media="only screen and (max-device width: 480px)">-->
+
+        <!-- Ratchet -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <!--<meta name="apple-mobile-web-app-title" content="Ratchet">-->
+        <meta name="mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="js/libs/ratchet/css/ratchet.min.css" />
+        <link rel="stylesheet" href="js/libs/ratchet/css/ratchet-theme-android.min.css" />
+        <script type="text/javascript" src="js/libs/ratchet/js/ratchet.min.js"></script>
+
+        <!-- jQuery -->
+        <script type="text/javascript" src="js/libs/jquery.min.js"></script>
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.3/jquery.mobile.min.css" />
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.3/jquery.mobile.min.js"></script>
+
+        <!-- Router -->
+        <!--<script type="text/javascript" src="lib/router.js"></script>-->
+
+        <!-- iScroll -->
+        <!-- <script type="text/javascript" src="js/libs/iscroll/iscroll.js"> -->
+
+        <!-- Roboto -->
+        <!--<link rel="stylesheet" href="css/Roboto_400_500_700" > -->
+
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+
+        <title>Air Tennis Friend</title>
+    </head>
+    <body>
+        <script id="home-template" type="text/template">
+            <div>
+                <header class="bar bar-nav">
+                    <a class="icon icon-left-nav pull-left" style="display:none;" id="back"></a>
+                    <a class="icon icon-gear pull-right" style="padding-left:5px;" id="settings" href="#" onclick="settingsOnClick(this, event)"></a>
+                    <a class="icon icon-search pull-right" style="padding-left:5px; display:none;" id="filter" href="#" onclick="filterOnClick(this, event)"></a>
+                    <h1 class="title">{{ title }}</h1>
+                </header>
+                <div class="content" id="content" style="overflow:auto; -webkit-overflow-scrolling:touch;">
+                </div>
+            </div>
+            <div id="filter-view" class="modal">
+                <header class="bar bar-nav">
+                    <a class="icon icon-close pull-right" href="#filter-view"></a>
+                    <h1 class="title">Filter</h1>
+                </header>
+                <div class="filter-content" style="margin-top:50px;">
+                    <form id="search_form" onsubmit="filterViewOnSubmit(this, event)" align="center">
+                        <input name="distance" id="distance" type="number" min="0" max="1000" placeholder="By Distance in kms">
+                        <button class="btn btn-positive" style="margin-top:5px; margin-bottom:5px;" type="submit">Filter</button>
+                    </form>
+                </div>
+            </div>
+            <div id="settings-view" class="modal">
+                <header class="bar bar-nav">
+                    <a class="icon icon-close pull-right" href="#settings-view"></a>
+                    <h1 class="title">Settings</h1>
+                </header>
+                <div class="settings-content" style="margin-top:50px;">
+                    <ul class="table-view">
+                        <li class="table-view-cell">
+                            <a id="clear_login_info" onclick="clearLoginInfo(this, event)">
+                                Clear Login Info
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </script>
+        <script id="players-list-template" type="text/template">
+            <ul class="table-view">
+                {{#each this}}
+                <li class="table-view-cell media">
+                    <a class="navigate-right" name="{{ this.id }}" href="#" onclick="playerOnClick(this, event)">
+                        {{#if this.profile_pic }}
+                        <img class="media-object pull-left" src="{{ this.profile_pic }}">
+                        {{else}}
+                        <span class="media-object pull-left icon icon-person" style="width:75px; height:100px; padding-top:30px; padding-left:17px;"></span>
+                        {{/if}}
+                        <div class="media-body">
+                            {{ this.name }}, {{ this.gender }}, {{ this.age }}
+                            <p style="font-size: 10px">Last seen: {{ this.last_seen }}</p>
+                        </div>
+                    </a>
+                </li>
+                {{/each}}
+            </ul>
+        </script>
+        <script id="profile-template" type="text/template">
+            <div class="card">
+                <ul class="table-view">
+                    <li class="table-view-cell media">
+                        {{#if this.profile_pic }}
+                        <img class="media-object pull-left" src="{{ this.profile_pic }}">
+                        {{else}}
+                        <span class="media-object pull-left icon icon-person" style="width:75px; height:100px; padding-top:30px; padding-left:17px;"></span>
+                        {{/if}}
+                        <div class="media-body">
+                            {{ this.name }}
+                            <p style="font-size:10px;">{{ this.age }} years</p>
+                            <p style="font-size:10px;">{{ this.gender }}</p>
+                            <p style="font-size:10px;">{{ this.location }}</p>
+                            <p style="font-size:10px;">{{ this.club }}</p>
+                            <p style="font-size:10px;">{{ this.club }}</p>
+                            <p style="font-size:10px;">{{ this.last_seen }}</p>
+                        </div>
+                    </li>
+                </ul>
+                <form id="push_form" onsubmit="pushOnSubmit(this, event)" align="center">
+                    <textarea style="text-align:left;" rows="5" name="message" id="message" placeholder="Send a message"></textarea>
+                    <button class="btn btn-primary" style="margin-top:5px; margin-bottom:5px;" type="submit">Send</button>
+                </form>
+            </div>
+        </script>
+        <script id="login-template" type="text/template">
+            <div align="center">
+                <form id="login_form" onsubmit="loginViewOnSubmit(this, event)" align="center">
+                    <input style="text-align:center;" type="text" name="login-username" id="login-username" placeholder="username">
+                    <input style="text-align:center;" type="password" name="login-password" id="login-password" placeholder="password">
+                    <button class="btn btn-primary" style="margin-top:5px; margin-bottom:5px;" type="submit">Log In</button>
+                </form>
+                <button class="btn btn-outlined" style="margin-top:20px;" type="button" onclick="signupOnClick()">New User? Sign Up</button>
+            </div>
+        </script>
+        <script id="signup-template"  type="text/template">
+            <div align="center">
+                <form id="signup_form" onsubmit="signupViewOnSubmit(this, event)" align="center">
+                    <input style="text-align:center;" type="text" name="signup-username" id="signup-username" placeholder="username">
+                    <input style="text-align:center;" type="password" name="signup-password" id="signup-password" placeholder="password">
+                    <input style="text-align:center;" type="email" name="signup-email" id="signup-email" placeholder="email">
+                    <button class="btn btn-outlined" style="margin-top:5px; margin-bottom:5px;" type="submit">Sign Up</button>
+                </form>
+            </div>
+        </script>
+        <script id="info-template" type="text/template">
+            <div align="center">
+                <a id="info_profile_pic" href="#" onclick="infoProfilePicOnClick(this, event)">
+                    <span class="media-object icon icon-person" style="width:75px; height:100px; margin-top:10px; margin-bottom:10px; padding-top:30px;" id="info_profile_pic_placeholder"></span>
+                </a>
+                <img style="margin-top:10px; margin-bottom:10px; display:none;" id="info_profile_pic_image" src="#" width="75" height="100">
+                <form id="info_form" onsubmit="infoViewOnSubmit(this, event)" align="center">
+                    <input style="text-align:center;" type="text" name="name" id="name" placeholder="Your Name">
+                    <input style="text-align:center;" type="number" name="age" id="age" placeholder="Your Age" min="16" max="80">
+                    <div style="height:40px; padding:10px 15px; border:1px solid rgba(0,0,0,0.2); margin-bottom:15px; background-color:#fff;">
+                        <input type="radio" name="gender" id="gender" value="Male" checked>Male</input>
+                        <input type="radio" name="gender" id="gender" value="Female">Female</input>
+                    </div>
+                    <input style="text-align:center;" type="text" name="location" id="location" placeholder="Your Home Location">
+                    <input style="text-align:center;" type="text" name="club" id="club" placeholder="Your Club">
+                    <input style="text-align:center;" type="number" name="skill_level" id="skill_level" placeholder="Your Skill Level" min="0" max="9">
+                    <button class="btn btn-outlined" style="margin-bottom:10px;" type="submit">Save</button>
+                </form>
+            </div>
+        </script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/libs/touchscroll.js"></script>
+        <script type="text/javascript" src="js/libs/parse-1.3.3.min.js"></script>
+        <script type="text/javascript" src="js/libs/handlebars-v2.0.0.js"></script>
+        <script type="text/javascript" src="js/init.js"></script>
+        <script type="text/javascript" src="js/filter_view.js"></script>
+        <script type="text/javascript" src="js/settings_view.js"></script>
+        <script type="text/javascript" src="js/profile_view.js"></script>
+        <script type="text/javascript" src="js/players_list_view.js"></script>
+        <script type="text/javascript" src="js/info_view.js"></script>
+        <script type="text/javascript" src="js/signup_view.js"></script>
+        <script type="text/javascript" src="js/login_view.js"></script>
+        <script type="text/javascript" src="js/home_view.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+    </body>
+</html>
+
+<!--
+            <form id="info_form" class="input-group" onsubmit="infoViewOnSubmit(this, event)" align="center">
+                <div class="input-row">
+                    <label>Name</label>
+                    <input type="text" name="name" id="name" placeholder="Your Name">
+                </div>
+                <div class="input-row">
+                    <label>Age</label>
+                    <input type="number" name="age" id="age" placeholder="Your Age" min="16" max="80">
+                </div>
+                <div class="input-row" style="height:100px;">
+                    <label rowspan="2">Gender</label>
+                    <ul class="table-view">
+                        <li class="table-view-cell">
+                            <input class="pull-left" type="radio" name="gender" id="gender" value="Male" checked>Male
+                        </li>
+                        <li class="table-view-cell">
+                            <input class="pull-right" type="radio" name="gender" id="gender" value="Male" checked>Female
+                        </li>
+                    </ul>
+                </div>
+                </div>
+                <div class="input-row">
+                    <label>Location</label>
+                    <input type="text" name="location" id="location" placeholder="Your Home Location">
+                </div>
+                <div class="input-row">
+                    <label>Club</label>
+                    <input type="text" name="club" id="club" placeholder="Your Club">
+                </div>
+                <div class="input-row">
+                    <label>Skill Level</label>
+                    <input type="number" name="skill_level" id="skill_level" placeholder="Your Skill Level" min="0" max="9">
+                </div>
+                <button class="btn btn-positive btn-block" type="submit">Save</button>
+            </form>
+
+-->
+<!--
+                <select name="location_country" id="location_country">
+                    <option value="Country">None</option>
+                    <option value="Holland">Holland</option>
+                    <option value="India">India</option>
+                </select>
+-->
