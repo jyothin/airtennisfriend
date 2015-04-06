@@ -12,7 +12,7 @@ var InfoView = function() {
 
     this.initialize();
 
-}
+};
 
 InfoView.prototype.template = Handlebars.compile($('#info-template').html());
 
@@ -20,30 +20,43 @@ function uploadInfo(user, profile_pic_parse_file, name, age, gender, skill_level
     var local_storage = app.getStorage('local');
     var geo_location = JSON.parse(local_storage.getItem('geo_location'));
     console.log(geo_location);
-    var geo_point = new Parse.GeoPoint({latitude: geo_location.latitude, longitude: geo_location.longitude});
-
-    var Info = Parse.Object.extend("Profile");
-    var info = new Info();
-    info.set("user", user);
-    if(profile_pic_parse_file) {
-        info.set("profile_pic", profile_pic_parse_file);
+    if (!DEBUG) {
+      var geo_point = new Parse.GeoPoint({latitude: geo_location.latitude, longitude: geo_location.longitude});
     }
-    info.set("geo_location", geo_point);
-    info.set("name", name);
-    info.set("age", age);
-    info.set("gender", gender);
-    info.set("skill_level", skill_level);
-    info.set("location", loc);
-    info.set("club", club);
+
+    //var Info = Parse.Object.extend("Profile");
+    //var info = new Info();
+    //info.set("user", user);
+    if(profile_pic_parse_file) {
+        //info.set("profile_pic", profile_pic_parse_file);
+        user.set("profile_pic", profile_pic_parse_file);
+    }
+    if(geo_point) {
+      //info.set("geo_location", geo_point);
+      user.set("geo_location", geo_point);
+    }
+    //info.set("name", name);
+    user.set("name", name);
+    //info.set("age", age);
+    user.set("age", age);
+    //info.set("gender", gender);
+    user.set("gender", gender);
+    //info.set("skill_level", skill_level);
+    user.set("skill_level", skill_level);
+    //info.set("location", loc);
+    user.set("location", loc);
+    //info.set("club", club);
+    user.set("club", club);
     
-    info.save(null, {
+    //info.save(null, {
+    user.save(null, {
         success: function(info) {
             console.log("User info saved");
             home_view.renderPlayersListView();
         }
     });
 
-};
+}
 
 function infoViewOnSubmit(t, e) {
     e.preventDefault();
@@ -82,10 +95,10 @@ function infoViewOnSubmit(t, e) {
         }
     }
     return false;
-};
+}
 
 function infoProfilePicOnClick(t, e) {
     app.getPic('info_profile_pic_image');
     $('#info_profile_pic_placeholder').css('display', 'none');
     $('#info_profile_pic_image').css('display', 'inherit');
-};
+}

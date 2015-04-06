@@ -86,15 +86,21 @@ var HomeView = function() {
         if(session_storage.getItem(id) === null) {
 
             if(app.checkConnection()) {
-                var Profile = Parse.Object.extend("Profile");
-                var query = new Parse.Query(Profile);
+                //var Profile = Parse.Object.extend("Profile");
+                //var query = new Parse.Query(Profile);
+                var query = new Parse.Query(Parse.User);
                 query.get(id, {
-                    success: function(profile) {
-                        var last_seen = new Date(profile.updatedAt);
+                    //success: function(profile) {
+                    success: function(user) {
+                        //var last_seen = new Date(profile.updatedAt);
+                        var last_seen = new Date(user.updatedAt);
                         var profile_pic = null;
-                        if(profile.get('profile_pic')) {
-                            profile_pic = profile.get('profile_pic').url();
+                        //if(profile.get('profile_pic')) {
+                        if(user.get('profile_pic')) {
+                            //profile_pic = profile.get('profile_pic').url();
+                            profile_pic = user.get('profile_pic').url();
                         }
+                        /*
                         var p = {
                             'profile_pic': profile_pic,
                             'name': profile.get('name'),
@@ -104,6 +110,19 @@ var HomeView = function() {
                             'club': profile.get('club'),
                             'skill_level': profile.get('skill_level'),
                             'id': profile.id,
+                            'last_seen': MONTHS[last_seen.getMonth()]+" "+last_seen.getDate()+", "+last_seen.getFullYear(),
+                        };
+                        */
+                        var p = {
+                            'profile_pic': profile_pic,
+                            'username': user.get('username'),
+                            'name': user.get('name'),
+                            'age': user.get('age'),
+                            'gender': user.get('gender'),
+                            'location': user.get('location'),
+                            'club': user.get('club'),
+                            'skill_level': user.get('skill_level'),
+                            'id': user.id,
                             'last_seen': MONTHS[last_seen.getMonth()]+" "+last_seen.getDate()+", "+last_seen.getFullYear(),
                         };
                         session_storage.setItem(id, JSON.stringify(p));
@@ -131,15 +150,17 @@ var HomeView = function() {
 
         var session_storage = app.getStorage('session');
         var stored_distance = session_storage.getItem("distance");
+        console.log("stored_distance = " + stored_distance);
 
         var local_storage = app.getStorage('local');
         var distance = local_storage.getItem('distance');
+        console.log("distance = " + distance);
 
         if(local_storage.getItem('geo_location')) {
             var geo_location = JSON.parse(local_storage.getItem('geo_location'));
         }
 
-        if(local_storage.getItem('players') === null || distance !== stored_distance) {
+        if(local_storage.getItem('players') === null || distance !== stored_distance || (stored_distance === null && distance === null) ) {
 
             if(stored_distance) {
                 local_storage.setItem('distance', distance);
@@ -149,8 +170,9 @@ var HomeView = function() {
             }
 
             if(app.checkConnection()) {
-                var Profile = Parse.Object.extend("Profile");
-                var query = new Parse.Query(Profile);
+                //var Profile = Parse.Object.extend("Profile");
+                //var query = new Parse.Query(Profile);
+                var query = new Parse.Query(Parse.User);
 
                 //TODO: sort by most recent updatedAt
                 //query.ascending("updatedAt");
@@ -169,6 +191,8 @@ var HomeView = function() {
                  
                 }
 
+                console.log("querying players list");
+
                 //query.limit(10);
                 query.find({
                     success: function(results) {
@@ -181,6 +205,7 @@ var HomeView = function() {
                             }
                             players[players.length] = {
                                 'profile_pic': profile_pic,
+                                'username': results[i].get('username'),
                                 'name': results[i].get('name'),
                                 'age': results[i].get('age'),
                                 'gender': results[i].get('gender'),
@@ -204,6 +229,7 @@ var HomeView = function() {
             }
 
         } else {
+            console.log("Already fetched players list");
             var players = JSON.parse(local_storage.getItem('players'));
             $('.content', this.$el).html(players_list_view.$el);
             this.showBackButton(false, '');

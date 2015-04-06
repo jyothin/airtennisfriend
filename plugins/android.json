@@ -119,7 +119,7 @@
         "org.apache.cordova.geolocation": {
             "PACKAGE_NAME": "com.airtennisfriend"
         },
-        "com.parse.cordova.core.pushplugin": {
+        "org.apache.cordova.core.parseplugin": {
             "PACKAGE_NAME": "com.airtennisfriend"
         }
     },
